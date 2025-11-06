@@ -1,0 +1,35 @@
+{
+  "appId": "com.dewey.mart",
+  "productName": "RIP emily",
+  "files": [
+    "dist-electron",
+    "dist-react",
+    "public/**",
+    "dist-electron/preload.cjs"
+  ],
+  "extraResources": [
+    {
+      "from": "public/",
+      "to": "public/"
+    },
+    {
+      "from": "dist-electron/preload.cjs",
+      "to": "dist-electron/preload.cjs"
+    }
+  ],
+  "icon": "./desktopIcon.png",
+  "linux": {
+    "target": "AppImage",
+    "category": "Utility"
+  },
+  "win": {
+    "target": "nsis"
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "JILUNGIE",
+      "repo": "testmart"
+    }
+  ]
+}
