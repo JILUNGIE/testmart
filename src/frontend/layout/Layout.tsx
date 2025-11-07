@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router";
+import useFile from "../hooks/useFile";
 
 function Layout() {
+  const { files } = useFile();
   useEffect(() => {
     const unsub = window.electron.subscribeChannelMsg((msg) => {
       console.log(msg);
@@ -13,7 +15,7 @@ function Layout() {
   }, []);
   return (
     <div className="h-screen w-screen">
-      <Outlet />
+      <Outlet context={{ files }} />
     </div>
   );
 }

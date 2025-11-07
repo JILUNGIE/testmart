@@ -1,10 +1,14 @@
-import { useNavigate } from "react-router";
-import useFile from "../hooks/useFile";
+import { useNavigate, useOutletContext } from "react-router";
+
 import { useEffect, useState } from "react";
+
+interface IOutletContext {
+  files: string[];
+}
 
 function VideoPage() {
   const [count, setCount] = useState<number>(0);
-  const { files } = useFile();
+  const { files } = useOutletContext<IOutletContext>();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -7,8 +7,7 @@ import {
 import pkg from "electron-updater";
 import { ipcWebContentsSend, isDev } from "./utils.js";
 const { autoUpdater } = pkg;
-// import path from "path";
-import { readdirSync, readFileSync } from "fs";
+import { readdirSync } from "fs";
 
 app.disableHardwareAcceleration(); // need orangepi only.... maybe....?
 
@@ -18,7 +17,8 @@ const createWindow = () => {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    frame: true,
+    frame: false,
+    fullscreen: true,
 
     webPreferences: {
       preload: getPreloadPath(),
@@ -26,10 +26,11 @@ const createWindow = () => {
   });
   if (isDev()) {
     win.loadURL("http://localhost:5173");
-    win.webContents.openDevTools();
+    win.webContents.openDevTools({
+      mode: "bottom",
+    });
   } else {
     win.loadFile(getUIPath());
-    win.webContents.openDevTools();
   }
 };
 
@@ -55,12 +56,8 @@ app.whenReady().then(() => {
       ipcWebContentsSend("CHANNEL_MSG", win.webContents, "cheking");
     });
 
-    autoUpdater.on("update-not-available", () => {
-      ipcWebContentsSend(
-        "CHANNEL_MSG",
-        win.webContents,
-        "update not available"
-      );
+    autoUpdater.on("update-not-available", (err) => {
+      ipcWebContentsSend("CHANNEL_MSG", win.webContents, JSON.stringify(err));
     });
 
     autoUpdater.on("error", (err) => {
@@ -76,8 +73,12 @@ app.whenReady().then(() => {
     });
 
     autoUpdater.on("download-progress", (progressObj) => {
-      let progress = progressObj.bytesPerSecond;
-      ipcWebContentsSend("CHANNEL_MSG", win.webContents, `${progress} "%"`);
+      let progress = progressObj.percent;
+      ipcWebContentsSend(
+        "CHANNEL_MSG",
+        win.webContents,
+        `${progress.toFixed(1)} "%"`
+      );
     });
 
     autoUpdater.on("update-downloaded", () => {

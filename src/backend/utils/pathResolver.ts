@@ -13,10 +13,11 @@ function getPublicPath() {
 }
 
 function getPreloadPath() {
+  // test 결과 getAppPath 의 위치와 dist-electron/preload.cjs 가 동일함
   return path.join(
     app.getAppPath(),
-    isDev() ? "." : "..",
-    "/dist-electron/preload.cjs"
+    isDev() ? "." : "",
+    "dist-electron/preload.cjs"
   );
 }
 

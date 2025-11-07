@@ -8,10 +8,12 @@ import { useNavigate } from "react-router";
 function SmilePage() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const oneMin = 1000 * 60 * 1;
   useEffect(() => {
-    // setTimeout(() => {
-    //   navigate("/");
-    // }, 5000);
+    const timer = setTimeout(() => {
+      clearTimeout(timer);
+      navigate("/");
+    }, oneMin);
   }, []);
   return (
     <div className="flex pt-10 flex-col w-screen h-screen justify-center items-center bg-black text-white text-3xl">

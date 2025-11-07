@@ -6,7 +6,6 @@ function useFile() {
   useEffect(() => {
     const unsub = window.electron.subscribeChannelPath((path) => {
       setFiles(path);
-      console.log(path.length);
     });
 
     return () => {
