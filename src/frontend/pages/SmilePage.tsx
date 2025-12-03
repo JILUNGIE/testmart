@@ -20,7 +20,9 @@ function SmilePage() {
     }
 
     try {
-      const res = await fetch(url.on);
+      const res = await fetch(url.on, {
+        method: "POST",
+      });
       const json = await res.json();
 
       console.log(json);
@@ -36,7 +38,9 @@ function SmilePage() {
     }
 
     try {
-      const res = await fetch(url.off);
+      const res = await fetch(url.off, {
+        method: "POST",
+      });
       const json = await res.json();
 
       console.log(json);
@@ -52,7 +56,9 @@ function SmilePage() {
     }
 
     try {
-      const res = await fetch(url.init);
+      const res = await fetch(url.init, {
+        method: "POST",
+      });
       const json = await res.json();
 
       console.log(json);
