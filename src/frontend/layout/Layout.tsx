@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
-import useFile from "../hooks/useFile";
+import HiddenButton from "../components/HiddenButton";
+import ApiSettingsPage from "../pages/ApiSettingsPage";
 
 function Layout() {
-  const { files } = useFile();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   useEffect(() => {
     const unsub = window.electron.subscribeChannelMsg((msg) => {
       console.log(msg);
@@ -13,9 +14,12 @@ function Layout() {
       unsub();
     };
   }, []);
+
   return (
     <div className="h-screen w-screen">
-      <Outlet context={{ files }} />
+      <Outlet />
+      <HiddenButton open={() => setIsOpen(true)} />
+      {isOpen && <ApiSettingsPage close={() => setIsOpen(false)} />}
     </div>
   );
 }

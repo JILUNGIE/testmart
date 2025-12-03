@@ -1,46 +1,50 @@
 import { useEffect } from "react";
 import useInput from "../hooks/useInput";
-//import useFetch from "../hooks/useFetch";
+import { getStorageItem, setStorageItem } from "../utils/localStorage";
 
 function ApiSettingsPage({ close }: { close: () => void }) {
   const onInput = useInput();
   const offInput = useInput();
   const initInput = useInput();
 
-  //const { data, loading, err } = useFetch("https://www.naver.com");
   useEffect(() => {
     const checkLocalstorageItems = () => {
-      const isApi = window.localStorage.getItem("api");
+      const value = getStorageItem("api");
 
-      if (!isApi) {
+      if (!value) {
         return;
       }
 
-      const apiObj = JSON.parse(isApi);
-
-      onInput.setValue(apiObj.on);
-      offInput.setValue(apiObj.off);
-      initInput.setValue(apiObj.init);
+      onInput.setValue(value.on);
+      offInput.setValue(value.off);
+      initInput.setValue(value.init);
     };
 
     checkLocalstorageItems();
   }, []);
 
-  const onClick = () => {
-    const objString = JSON.stringify({
+  const onClickSave = () => {
+    setStorageItem("api", {
       on: onInput.input,
       off: offInput.input,
       init: initInput.input,
     });
-    window.localStorage.setItem("api", objString);
 
     close();
   };
 
+  const onClickQuit = () => {
+    window.electron.reqQuitApp();
+  };
+
+  const onClickDevToolOpen = () => {
+    window.electron.reqOpenDevTools();
+  };
+
   return (
     <div className="absolute flex justify-center items-center top-0 left-0 bg-[rgba(169,169,169,0.5)] w-screen h-screen">
-      <div className="bg-black w-[60vw] h-[70vh] p-5 flex flex-col rounded-4xl">
-        <div className="w-full h-full flex flex-col justify-around items-center">
+      <div className="bg-black w-[60vw] h-[70vh] p-5 flex flex-col rounded-4xl py-10">
+        <div className="w-full h-full flex flex-col gap-y-15 items-center overflow-auto text-white text-3xl">
           <div>
             <span>ON API : </span>
             <input
@@ -69,10 +73,33 @@ function ApiSettingsPage({ close }: { close: () => void }) {
               className="w-1/2 border-b ml-5"
             />
           </div>
+          <div className="w-full flex justify-end ">
+            <button
+              onClick={onClickSave}
+              className="bg-purple-400 rounded-4xl px-4 py-2 hover:opacity-85 active:opacity-50"
+            >
+              save
+            </button>
+          </div>
+          <div className="w-full flex items-center justify-between">
+            <span>Open Dev Tool: </span>
+            <button
+              onClick={onClickDevToolOpen}
+              className="bg-amber-400 rounded-4xl px-4 py-2 hover:opacity-85 active:opacity-50"
+            >
+              Open
+            </button>
+          </div>
+          <div className="w-full flex items-center justify-between">
+            <span>Close App: </span>
+            <button
+              onClick={onClickQuit}
+              className="bg-red-400 rounded-4xl px-4 py-2 hover:opacity-85 active:opacity-50"
+            >
+              Bye
+            </button>
+          </div>
         </div>
-        <button onClick={onClick} className="bg-purple-400 rounded-4xl">
-          save
-        </button>
       </div>
     </div>
   );

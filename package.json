@@ -1,7 +1,7 @@
 {
   "name": "emily",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.8",
   "type": "module",
   "main": "./dist-electron/main.js",
   "author": "JILUNGIE <j6139437@robotnmore.com>",
@@ -14,7 +14,7 @@
     "preview": "vite preview",
     "transpile:electron": "npx tsc --project ./src/backend",
     "dev:electron": "npm run transpile:electron && cross-env NODE_ENV=development electron .",
-    "dist:linux": "npm run transpile:electron && npm run build && electron-builder --linux --arm64"
+    "build:linux": "npm run transpile:electron && npm run build && electron-builder --linux --arm64"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",

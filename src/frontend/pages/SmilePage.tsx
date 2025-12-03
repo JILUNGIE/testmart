@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
-//import { useNavigate } from "react-router";
+import { useEffect } from "react";
 import Button from "../components/Button";
-import HiddenButton from "../components/HiddenButton";
-import ApiSettingsPage from "./ApiSettingsPage";
 import { useNavigate } from "react-router";
+import { getStorageItem } from "../utils/localStorage";
 
 function SmilePage() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const oneMin = 1000 * 60 * 1;
   useEffect(() => {
@@ -15,16 +12,64 @@ function SmilePage() {
       navigate("/");
     }, oneMin);
   }, []);
+
+  const onClickOnBtn = async () => {
+    const url = getStorageItem("api");
+    if (!url) {
+      return;
+    }
+
+    try {
+      const res = await fetch(url.on);
+      const json = await res.json();
+
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onClickOffBtn = async () => {
+    const url = getStorageItem("api");
+    if (!url) {
+      return;
+    }
+
+    try {
+      const res = await fetch(url.off);
+      const json = await res.json();
+
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onClickInitBtn = async () => {
+    const url = getStorageItem("api");
+    if (!url) {
+      return;
+    }
+
+    try {
+      const res = await fetch(url.init);
+      const json = await res.json();
+
+      console.log(json);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
-    <div className="flex pt-10 flex-col w-screen h-screen justify-center items-center bg-black text-white text-3xl">
+    <div className="flex pt-10 flex-col w-screen h-screen justify-center items-center bg-black text-white text-6xl">
       <div className="w-full flex flex-1 gap-5">
-        <Button variant="blue" flex={1}>
+        <Button variant="blue" flex={1} onClick={onClickOnBtn}>
           ON
         </Button>
-        <Button variant="red" flex={2}>
+        <Button variant="red" flex={2} onClick={onClickOffBtn}>
           OFF
         </Button>
-        <Button flex={1} variant="gray">
+        <Button flex={1} variant="gray" onClick={onClickInitBtn}>
           INIT
         </Button>
       </div>
@@ -35,11 +80,8 @@ function SmilePage() {
         />
       </div>
       <div className="flex-4 bg-gray-800 w-full flex justify-center items-center rounded-4xl">
-        <span>NUVI가 열심히 공기청정 중이에요!</span>
-        <HiddenButton open={() => setIsOpen(true)} />
+        <span>열심히 공기청정 중이에요!</span>
       </div>
-
-      {isOpen && <ApiSettingsPage close={() => setIsOpen(false)} />}
     </div>
   );
 }

@@ -6,11 +6,18 @@ type Variant = "red" | "blue" | "gray";
 interface IButton {
   variant: Variant;
   flex: number;
+  onClick: () => void;
 }
 
-function Button({ variant, flex, children }: PropsWithChildren<IButton>) {
+function Button({
+  variant,
+  flex,
+  onClick,
+  children,
+}: PropsWithChildren<IButton>) {
   return (
     <button
+      onClick={onClick}
       className={clsx(
         "rounded-4xl",
         {

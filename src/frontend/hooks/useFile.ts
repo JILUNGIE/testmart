@@ -5,8 +5,11 @@ function useFile() {
 
   useEffect(() => {
     const unsub = window.electron.subscribeChannelPath((path) => {
+      console.log(path);
       setFiles(path);
     });
+
+    window.electron.reqGetVideoList();
 
     return () => {
       unsub();

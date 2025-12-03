@@ -1,54 +1,51 @@
-import { useNavigate, useOutletContext } from "react-router";
-
-import { useEffect, useState } from "react";
-
-interface IOutletContext {
-  files: string[];
-}
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 function VideoPage() {
-  const [count, setCount] = useState<number>(0);
-  const { files } = useOutletContext<IOutletContext>();
   const navigate = useNavigate();
+  const [videoList, setVideoList] = useState<string[]>([]);
+  const [isReady, setIsReady] = useState(false);
+  const [index, setIndx] = useState(0);
+  const [filePath, setFilePath] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (count >= files.length && files.length > 0) {
-      setCount(0);
+    const loadFiles = async () => {
+      const files = await window.electron.reqVideoFiles();
+      setVideoList(files);
+      console.log(files);
+      setIsReady(true);
+    };
+
+    loadFiles();
+  }, []);
+
+  useEffect(() => {
+    if (videoList.length > 0) {
+      setFilePath(videoList[index]);
     }
-  }, [count, files]);
+  }, [index, videoList]); // index 또는 videoUrl이 변경될 때마다 filePath 갱신
 
-  const onEnded = () => {
-    setCount((prev) => prev + 1);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleEnd = async () => {
+    setIsReady(false);
+    setIndx((prev) => (prev < videoList.length - 1 ? prev + 1 : 0));
+    videoRef.current!.play();
+    setIsReady(true);
   };
 
   return (
-    <div onDragOver={handleOver} onDragLeave={handleLeave} onDrop={handleDrop}>
-      {files.length > 0 ? (
+    <div>
+      {isReady ? (
         <video
-          key={count}
+          ref={videoRef}
           onClick={() => navigate("/smile")}
           autoPlay
-          src={files[count]}
-          onEnded={onEnded}
           className="object-cover w-screen h-screen"
+          onEnded={handleEnd}
+          src={filePath}
         ></video>
       ) : (
-        "No Video"
+        <div>Loading...</div> // 비디오 로딩 중 표시
       )}
     </div>
   );
